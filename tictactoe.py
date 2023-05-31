@@ -60,7 +60,7 @@ class Board():
         board = Board()
         
         # make move
-        board.position[row-1, col-1] = self.player_1
+        board.position[row, col] = self.player_1
         
         # switch players
         (board.player_1, board.player_2) = (board.player_2, board.player_1)
@@ -68,17 +68,107 @@ class Board():
         # return new board state
         return board
     
+    def is_draw(self):
+        #loop over board squares
+        for row, col in self.position:
+            # empty square found
+            if self.position[row, col] == self.empty_square:
+                return False
+        
+        # by default return True
+        return True
     
-
-
+    # get whether the game is won
+    def is_win(self):#
+        #############################
+        # vertival sequence check
+        #############################
+        
+        # loop over board columns
+        for col in range(3):
+            # define winning sequence list
+            winning_sequence = []
+            
+            # loop over board rows
+            for row in range(3):
+                # if found same next element in the row
+                if self.position[row, col] == self.player_2:
+                    # upadte winning sequence
+                    winning_sequence.append((row, col))
+                # if we have 3 elements in the row
+                if len(winning_sequence) == 3:
+                    # return wining state
+                    return True 
+                
+        #############################
+        # horizontal sequence check
+        #############################
+        
+        # loop over board rows
+        for row in range(3):
+            # define winning sequence
+            winning_sequence = []
+            
+            # loop over board columns
+            for col in range(3):
+                # if found same nex element in the column
+                if self.position[row, col] == self.player_2:
+                    # update winning sequence
+                    winning_sequence.append((row, col))
+                
+                # if we have 3 elements in the row
+                if len(winning_sequence) == 3:
+                    # return wining state
+                    return True
+                
+        #############################
+        # 1st diagonal sequence check
+        #############################
+        winning_sequence = []
+        # loop over board rows
+        for row in range(3):
+            # define winning sequence
+            
+            col = row 
+            
+            # if found same nex element in the column
+            if self.position[row, col] == self.player_2:
+                # update winning sequence
+                winning_sequence.append((row, col))
+            
+            # if we have 3 elements in the row
+            if len(winning_sequence) == 3:
+                # return wining state
+                return True
+        #############################
+        # 2st diagonal sequence check
+        #############################
+        
+        # by default return False
+        return False
+        
 if __name__ == '__main__':
     # create board instance
     board = Board()
 
-    # make move on board
+    # define custom board state
+    board.position = { 
+        (0, 0): 'x', (0, 1): 'x', (0, 2): 'x',
+        (1, 0): 'x', (1, 1): 'x', (1, 2): 'o',
+        (2, 0): 'o', (2, 1): 'o', (2, 2): 'x' 
+    }
+    
+    # swap players manually
+    board.player_2 = 'x'
+    
+    # print board
     print(board)
-    board = board.make_move(1, 1)
-    print(board)
-    board = board.make_move(2, 3)
-    print(board)
+    print('Player_2: "%s"' % board.player_2)
+
+    
+    # distiguish  between win and draw states
+    if board.is_win():
+        print('Won: ', board.is_win())
+    else:
+        print('Drawn: ', board.is_draw())
     
