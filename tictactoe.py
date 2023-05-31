@@ -56,8 +56,8 @@ class Board():
         
     # make move
     def make_move(self, row, col):
-        # create new board instnace
-        board = Board()
+        # create new board instnace that inherites from the current board 
+        board = Board(self)
         
         # make move
         board.position[row, col] = self.player_1
@@ -144,31 +144,66 @@ class Board():
         # 2st diagonal sequence check
         #############################
         
+        # define winning sequence list
+        winning_sequence = []
+        
+        # loop over board rows
+        for row in range(3):
+            # init column
+            col = 3 - row - 1
+        
+            # if found same next element in the row
+            if self.position[row, col] == self.player_2:
+                # update winning sequence
+                winning_sequence.append((row, col))
+                
+            # if we have 3 elements in the row
+            if len(winning_sequence) == 3:
+                # return the game is won state
+                return True
+        
         # by default return False
         return False
+        
+    # generate legal movesto play in the current position
+    def generate_states(self):
+        # define states list (moves list - list of available actions to consider)
+        actions = []
+        
+        # loop over board rows
+        for row in range(3):
+            # loop over board columns
+            for col in range(3):
+                # make sure the square is empty
+                if self.position[row, col] == self.empty_square:
+                    # append legal move to the list
+                    actions.append(self.make_move(row, col))
+        
+        # return list of available actions (board class instances)
+        return actions
+        
+        
+        
+        
+        
         
 if __name__ == '__main__':
     # create board instance
     board = Board()
-
-    # define custom board state
-    board.position = { 
-        (0, 0): 'x', (0, 1): 'x', (0, 2): 'x',
-        (1, 0): 'x', (1, 1): 'x', (1, 2): 'o',
-        (2, 0): 'o', (2, 1): 'o', (2, 2): 'x' 
-    }
-    
-    # swap players manually
-    board.player_2 = 'x'
-    
-    # print board
+    print('this is initial board state')
     print(board)
-    print('Player_2: "%s"' % board.player_2)
 
+    # generte available actions
+    actions = board.generate_states()
     
-    # distiguish  between win and draw states
-    if board.is_win():
-        print('Won: ', board.is_win())
-    else:
-        print('Drawn: ', board.is_draw())
+    # loop over generated actions
+    for action in actions:
+        # print action
+        print(action)
+        
+    # take action (make move on board)
+    board = actions[0]
     
+    # print updated board
+    print('First generated move had been made on bord:')
+    print(board)
