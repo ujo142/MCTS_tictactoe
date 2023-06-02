@@ -1,11 +1,6 @@
-#
-# AI that learns to play Tic Tac Toe using
-#        reinforcement learning
-#                (MCTS)
-#
-
-# packages
 from copy import deepcopy
+from mcts import MCTS
+from tree_node import TreeNode
 
 # Tic Tac Toe board class
 class Board():
@@ -178,6 +173,9 @@ class Board():
         # print board
         print(self)
                 
+        # create MCTS instance
+        mcts = MCTS()
+        
         # game loop
         while True:
             # get user input
@@ -202,7 +200,20 @@ class Board():
                 # make move on board
                 self = self.make_move(row, col)
                 
-                # make AI move here...
+                # print board
+                print(self)
+                
+                  # search for the best move
+                best_move = mcts.search(self)
+                
+                # legal moves available
+                try:
+                    # make AI move here
+                    self = best_move.board
+                
+                # game over
+                except:
+                    pass
                 
                 # print board
                 print(self)
@@ -253,7 +264,5 @@ if __name__ == '__main__':
     
     # start game loop
     board.game_loop()
-    
-    
-    
-    
+        
+        
